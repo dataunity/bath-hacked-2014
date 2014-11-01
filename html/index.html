@@ -45,7 +45,7 @@
                 }).addTo(map);
 
                 // Load the bus stops
-                d3.csv('/data/traveline_naptan_stops_bath.csv', function (data) {
+                d3.csv('../data/traveline_naptan_stops_bath.csv', function (data) {
                     $.each(data, function (index, busStop) {
                         var lat = +busStop["Latitude"],
                             long = +busStop["Longitude"];
@@ -59,7 +59,7 @@
                 });
 
                 // Load the bus routes
-                d3.csv('/data/routes_with_latlong_bath.csv', function (data) {
+                d3.csv('../data/routes_with_latlong_bath.csv', function (data) {
                     //console.log(data)
                     var count = 0;
                     $.each(data, function (index, routeSegment) {
