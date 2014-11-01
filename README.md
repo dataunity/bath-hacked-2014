@@ -1,7 +1,9 @@
 Bus Routes
 ==========
 
-This project takes the bus route information from Traveline and merges it with Naptan information (e.g. lat/long). 
+This project takes the bus route information from Traveline and merges it with Naptan information (e.g. lat/long).
+
+<a href="http://dataunity.github.io/bath-hacked-2014/html/index.html">View the map.</a>
 
 This information is then displayed on a Leaflet.js map.
 
