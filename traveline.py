@@ -6,10 +6,12 @@ from os.path import isfile, join
 
 
 def parsefiles():
-    data_path = "/home/normal/Projects/OpenData/Travelline/SW"
-    data_files = [ f for f in listdir(data_path) if isfile(join(data_path,f)) ]
     print "Parsing files..."
 
+    # Path to directory of Traveline xml files
+    data_path = "/home/normal/Projects/OpenData/Travelline/SW"
+    data_files = [ f for f in listdir(data_path) if isfile(join(data_path,f)) ]
+    
     # Prepare csv writers
     with open('data/AnnotatedStopPointRef.csv', 'wb') as stops_csvfile:
         stops_csv_writer = csv.writer(stops_csvfile)
@@ -25,20 +27,21 @@ def parsefiles():
                 print file_path
                 parsefile(file_path, stops_csv_writer, routes_csv_writer)
 
-    
 
 def parsefile(file_path, stops_csv_writer, routes_csv_writer):
     xmldoc = minidom.parse(file_path)
 
+    # Get the Annotated Stops info
     annot_stoppoints = xmldoc.getElementsByTagName('AnnotatedStopPointRef')
     for s in annot_stoppoints:
         stop_point_ref = s.getElementsByTagName('StopPointRef')[0].childNodes[0].nodeValue
         common_name = s.getElementsByTagName('CommonName')[0].childNodes[0].nodeValue
         locality_name = s.getElementsByTagName('LocalityName')[0].childNodes[0].nodeValue
         locality_qualifier = s.getElementsByTagName('LocalityQualifier')[0].childNodes[0].nodeValue
-        
+        # Write stop info to csv file
         stops_csv_writer.writerow([stop_point_ref, common_name, locality_name, locality_qualifier])
 
+    # Get the route info
     route_section = xmldoc.getElementsByTagName('RouteSection')
     for rs in route_section:
         route_links = rs.getElementsByTagName('RouteLink')
@@ -46,18 +49,16 @@ def parsefile(file_path, stops_csv_writer, routes_csv_writer):
 
         for rl in route_links:
             route_link_id = rl.attributes['id'].value
-            #print route_link_id
             from_stop = rl.getElementsByTagName('From')[0] \
                 .getElementsByTagName('StopPointRef')[0] \
                 .childNodes[0].nodeValue
             to_stop = rl.getElementsByTagName('To')[0] \
                 .getElementsByTagName('StopPointRef')[0] \
                 .childNodes[0].nodeValue
-
+            # Write route info to csv file
             routes_csv_writer.writerow([route_section_id, route_link_id, from_stop, to_stop])
 
-        
-
+    # ToDo: get route name and journey info from xml file
 
 if __name__ == "__main__":
     parsefiles()

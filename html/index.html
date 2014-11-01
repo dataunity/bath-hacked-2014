@@ -12,6 +12,10 @@
     <body>
         <div id="map"></div>
         <script>
+            // Before loading this page, generate the data by running the traveline.py file,
+            // then run the "Traveline Data Merge" ipython notebook to merge the Taveline
+            // data with Naptan info.
+
             // From http://stackoverflow.com/questions/1484506/random-color-generator-in-javascript
             function rainbow(numOfSteps, step) {
                 // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
@@ -40,29 +44,21 @@
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
+                // Load the bus stops
                 d3.csv('/data/traveline_naptan_stops_bath.csv', function (data) {
-                    //console.log(data)
                     $.each(data, function (index, busStop) {
                         var lat = +busStop["Latitude"],
                             long = +busStop["Longitude"];
-                        // if (index > 150) {
-                        //     return false;
-                        // }
 
                         var circle = L.circle([lat, long], 5, {
                             color: 'red',
                             fillColor: '#f03',
                             fillOpacity: 0.5
                         }).addTo(map);
-
-                        // var firstpolyline = new L.Polyline(pointList, {
-                        //     color: 'red',
-                        //     weight: 5,
-                        //     smoothFactor: 1
-                        // }).addTo(map);
                     });
                 });
 
+                // Load the bus routes
                 d3.csv('/data/routes_with_latlong_bath.csv', function (data) {
                     //console.log(data)
                     var count = 0;
@@ -77,7 +73,8 @@
                         var firstpolyline = new L.Polyline([fromPoint, toPoint], {
                             color: rainbow(50, count),
                             weight: 5,
-                            smoothFactor: 1
+                            smoothFactor: 1,
+                            fillOpacity: 0.7
                         }).addTo(map);
 
                         count++;
