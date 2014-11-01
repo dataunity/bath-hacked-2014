@@ -1,12 +1,21 @@
 # Parser for traveline data
 from xml.dom import minidom
 import csv
+from os import listdir
+from os.path import isfile, join
 
 
 def parsefiles():
+    data_path = "/home/normal/Projects/OpenData/Travelline/SW"
+    data_files = [ f for f in listdir(data_path) if isfile(join(data_path,f)) ]
     print "Parsing files..."
-    file_path = "/home/normal/Projects/OpenData/Travelline/SW/swe_30-7-A-y10-1.xml"
+    #file_path = "/home/normal/Projects/OpenData/Travelline/SW/swe_30-7-A-y10-1.xml"
+    for data_file in data_files:
+        print data_file
 
+    
+
+def parsefile(file_path)
     xmldoc = minidom.parse(file_path)
 
     annot_stoppoints = xmldoc.getElementsByTagName('AnnotatedStopPointRef')
