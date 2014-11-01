@@ -7,7 +7,6 @@ def parsefiles():
     print "Parsing files..."
     file_path = "/home/normal/Projects/OpenData/Travelline/SW/swe_30-7-A-y10-1.xml"
 
-
     xmldoc = minidom.parse(file_path)
 
     annot_stoppoints = xmldoc.getElementsByTagName('AnnotatedStopPointRef')
@@ -16,6 +15,7 @@ def parsefiles():
 
     with open('data/AnnotatedStopPointRef.csv', 'wb') as csvfile:
         csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["StopPointRef", "CommonName", "LocalityName", "LocalityQualifier"])
         for s in annot_stoppoints:
             stop_point_ref = s.getElementsByTagName('StopPointRef')[0].childNodes[0].nodeValue
             common_name = s.getElementsByTagName('CommonName')[0].childNodes[0].nodeValue
@@ -29,13 +29,24 @@ def parsefiles():
 
             csv_writer.writerow([stop_point_ref, common_name, locality_name, locality_qualifier])
 
-    # route_section = xmldoc.getElementsByTagName('RouteSection')
-    # with open('RouteSection.csv', 'wb') as csvfile:
-    #     csv_writer = csv.writer(csvfile)
-    #     for s in route_section:
-    #         route_links = s.getElementsByTagName('RouteLink')
+    route_section = xmldoc.getElementsByTagName('RouteSection')
+    with open('data/RouteSection.csv', 'wb') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["RouteLinkId", "From", "To"])
+        for s in route_section:
+            route_links = s.getElementsByTagName('RouteLink')
 
-    #         csv_writer.writerow([stop_point_ref, common_name, locality_name, locality_qualifier])
+            for rl in route_links:
+                route_link_id = rl.attributes['id'].value
+                #print route_link_id
+                from_stop = rl.getElementsByTagName('From')[0] \
+                    .getElementsByTagName('StopPointRef')[0] \
+                    .childNodes[0].nodeValue
+                to_stop = rl.getElementsByTagName('To')[0] \
+                    .getElementsByTagName('StopPointRef')[0] \
+                    .childNodes[0].nodeValue
+
+                csv_writer.writerow([route_link_id, from_stop, to_stop])
 
         
 
